@@ -7,7 +7,7 @@ Bootstrap a local Kubernetes cluster with [k3s](https://k3s.io/) on Debian-based
 ### 1. Clone and configure
 
 ```bash
-git clone https://github.com/YOUR_USER/local-k8s.git
+git clone https://github.com/eddymdz/local-k8s
 cd local-k8s
 cp config/config.env.example config/config.env
 # Edit config/config.env for your environment
@@ -28,7 +28,7 @@ When it finishes, save the join token printed at the end (also stored in `/var/l
 On each additional machine:
 
 ```bash
-git clone https://github.com/YOUR_USER/local-k8s.git
+git clone https://github.com/eddymdz/local-k8s
 cd local-k8s
 cp config/config.env.example config/config.env
 ```
@@ -84,7 +84,7 @@ Set `INSTALL_CLI_TOOLS_ON_AGENTS=false` in `config/config.env` if you only want 
 If you only have `curl` and `sudo`, you can fetch and run the installer directly:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/local-k8s/main/bootstrap.sh | sudo bash -s -- server
+curl -fsSL https://raw.githubusercontent.com/eddymdz/local-k8s/main/bootstrap.sh | sudo bash -s -- server
 ```
 
 For a worker (set URL and token first):
@@ -92,7 +92,7 @@ For a worker (set URL and token first):
 ```bash
 export K3S_URL=https://192.168.1.10:6443
 export K3S_TOKEN=K10abc...
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/local-k8s/main/bootstrap.sh | sudo -E bash -s -- agent
+curl -fsSL https://raw.githubusercontent.com/eddymdz/local-k8s/main/bootstrap.sh | sudo -E bash -s -- agent
 ```
 
 ## Project layout
