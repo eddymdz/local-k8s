@@ -210,6 +210,24 @@ install_jq() {
   install_apt_packages jq
 }
 
+install_argocd_cli() {
+  tool_enabled INSTALL_ARGOCD_CLI || return 0
+  command -v argocd >/dev/null 2>&1 && return 0
+
+  local version="${ARGOCD_CLI_VERSION:-${ARGOCD_VERSION:-stable}}"
+  local arch
+  arch=$(detect_arch)
+  local url
+
+  if [[ "$version" == "stable" || "$version" == "latest" ]]; then
+    url="https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-${arch}"
+  else
+    url="https://github.com/argoproj/argo-cd/releases/download/${version}/argocd-linux-${arch}"
+  fi
+
+  install_binary argocd "$url"
+}
+
 install_shell_completion() {
   tool_enabled INSTALL_SHELL_COMPLETION || return 0
   command -v kubectl >/dev/null 2>&1 || return 0
@@ -229,6 +247,9 @@ fi
 if command -v helm >/dev/null 2>&1; then
   source <(helm completion bash) 2>/dev/null || true
 fi
+if command -v argocd >/dev/null 2>&1; then
+  source <(argocd completion bash) 2>/dev/null || true
+fi
 EOF
 }
 
@@ -244,6 +265,7 @@ Installed cluster tools:
   kubectx   - Switch between contexts
   kubens    - Switch between namespaces
   jq / yq   - JSON and YAML processing
+  argocd    - Argo CD CLI for GitOps
 
 Quick start (control plane):
   ./scripts/get-kubeconfig.sh
@@ -255,6 +277,13 @@ EOF
 }
 
 main() {
+  if [[ "${1:-}" == "--argocd-only" ]]; then
+    require_root "$0"
+    load_config
+    install_argocd_cli
+    exit 0
+  fi
+
   [[ "${INSTALL_CLI_TOOLS:-true}" == "true" ]] || {
     log "CLI tool installation skipped (INSTALL_CLI_TOOLS=false)."
     exit 0
@@ -270,6 +299,7 @@ main() {
   install_kubectx_tools
   install_jq
   install_yq
+  install_argocd_cli
   install_shell_completion
   print_tools_summary
 }

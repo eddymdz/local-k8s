@@ -59,4 +59,8 @@ if saved_token=$(read_server_token); then
 fi
 save_token "$token"
 
+if [[ "${INSTALL_ARGOCD:-true}" == "true" ]]; then
+  "${SCRIPT_DIR}/install-argocd.sh"
+fi
+
 print_server_summary "$node_ip" "$token"

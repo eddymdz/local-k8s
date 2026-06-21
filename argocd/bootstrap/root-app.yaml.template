@@ -1,0 +1,26 @@
+# App-of-apps root Application. Used when ARGOCD_BOOTSTRAP_GITOPS=true.
+# Placeholders are replaced by bin/install-argocd.sh or scripts/argocd-bootstrap-apps.sh.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-apps
+  namespace: __ARGOCD_NAMESPACE__
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: __GITOPS_REPO__
+    targetRevision: __GITOPS_BRANCH__
+    path: __GITOPS_PATH__
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: __ARGOCD_NAMESPACE__
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

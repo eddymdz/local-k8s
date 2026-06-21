@@ -23,6 +23,7 @@ Commands:
   server     Install k3s control plane on this node
   agent      Join this node to an existing cluster as a worker
   tools      Install kubectl, k9s, helm, and other admin CLI tools
+  argocd     Install Argo CD (applications are managed from your private GitOps repo)
   uninstall  Remove k3s from this node
 
 Configuration:
@@ -34,6 +35,7 @@ Examples:
   sudo $0 server
   sudo $0 agent
   sudo $0 tools
+  ./install.sh argocd
   sudo $0 uninstall
 EOF
 }
@@ -58,6 +60,10 @@ main() {
       require_root "$0"
       load_config
       exec "${ROOT_DIR}/bin/install-cli-tools.sh"
+      ;;
+    argocd)
+      load_config
+      exec "${ROOT_DIR}/bin/install-argocd.sh"
       ;;
     uninstall)
       exec "${ROOT_DIR}/scripts/uninstall.sh"
